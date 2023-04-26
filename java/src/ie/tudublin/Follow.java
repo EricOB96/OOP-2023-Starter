@@ -21,4 +21,3 @@ public class Follow {
         return word + ": " + count;
     }
 }
-```
