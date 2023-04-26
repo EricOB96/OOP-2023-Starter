@@ -20,6 +20,11 @@ public class Word {
         return follows;
     }
 
+    public void findFollow(String str)
+    {
+        
+    }
+
     @Override
     public String toString() {
         StringBuilder sm = new StringBuilder();
