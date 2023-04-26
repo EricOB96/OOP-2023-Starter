@@ -1,69 +1,78 @@
 package ie.tudublin;
 
 import java.util.ArrayList;
+import java.util.*;
+
 import processing.core.PApplet;
 
 public class DANI extends PApplet {
 
-	String[] sonnet;
+    String[] sonnet;
+    HashMap<String, ArrayList<String>> wordFollows = new HashMap<>();
 
-	public void settings() {
-		size(1000, 1000);
-		// fullScreen(SPAN);
-	}
+    public void settings() {
+        size(1000, 1000);
+    }
 
-	public String[] writeSonnet() {
-		return null;
-	}
+	// load the file
+    public void loadFile() {
+        sonnet = loadStrings("shakespere.txt");
+        for (int i = 0; i < sonnet.length; i++) {
+            String line = sonnet[i];
+            String[] words = split(line, ' ');
+            for (int j = 0; j < words.length - 1; j++) {
+                String word = words[j].toLowerCase().replaceAll("[^\\w\\s]", "");
+                String nextWord = words[j + 1].toLowerCase().replaceAll("[^\\w\\s]", "");
 
-	public void loadFile() {
-		sonnet = loadStrings("small.txt"); // Load a text file into a String array
-		for (int i = 0; i < sonnet.length; i++) {
-			String line = sonnet[i];
-			String[] words = split(line, ' '); // Split a string into an array of words
-			for (int j = 0; j < words.length; j++) {
-				String word = words[j];
-				String w = word.replaceAll("[^\\w\\s]", ""); // Remove punctuation characters
-				String s = w.toLowerCase(); // Convert a string to lower case
-				words[j] = s;
-			}
-			sonnet[i] = join(words, ' ');
-		}
-	}
+                ArrayList<String> follows = wordFollows.getOrDefault(word, new ArrayList<>());
+                follows.add(nextWord);
+                wordFollows.put(word, follows);
+            }
+        }
+    }
 
-	public boolean findWord(String searchWord) {
-		for (String word : sonnet) {
-			if (word.equalsIgnoreCase(searchWord)) {
-				return true;
-			}
-		}
-		return false;
-	}
+	// generating sonnet
+    public String[] writeSonnet() {
+        Random random = new Random();
+        String[] generateSonnet = new String[14];
+        ArrayList<String> words = new ArrayList<>(wordFollows.keySet());
 
-	public void printModel() {
-		for (String line : sonnet) {
-			System.out.println(line);
-		}
-	}
+        for (int i = 0; i < 14; i++) {
 
-	public void setup() {
-		colorMode(HSB);
-		loadFile();
-		printModel(); // Call printModel() to print the loaded file
-	}
+            StringBuilder line = new StringBuilder();
+            String word = words.get(random.nextInt(words.size()));
 
-	public void keyPressed() {
+            for (int j = 0; j < 8; j++) {
+                line.append(word).append(" ");
+                ArrayList<String> follows = wordFollows.get(word);
 
-	}
+                if (follows == null || follows.isEmpty()) {
+                    break;
+                }
+                word = follows.get(random.nextInt(follows.size()));
+            }
 
-	float off = 0;
+            generateSonnet[i] = line.toString().trim();
+        }
+        return generateSonnet;
+    }
 
-	public void draw() {
-		background(0);
-		fill(255);
-		noStroke();
-		textSize(20);
-		textAlign(CENTER, CENTER);
-	}
+    public void setup() {
+        colorMode(HSB);
+        loadFile();
+        String[] generateSonnet = writeSonnet();
+        for (String line : generateSonnet) {
+            System.out.println(line);
+        }
+    }
+
+    public void draw() {
+        background(0);
+        fill(255);
+        noStroke();
+        textSize(20);
+        textAlign(CENTER, CENTER);
+    }
+
 
 }
