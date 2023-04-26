@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.*;
 
 import processing.core.PApplet;
+import processing.data.*;;
 
 public class DANI extends PApplet {
 
@@ -31,6 +32,17 @@ public class DANI extends PApplet {
         }
     }
 
+	public void printModel()
+	{
+		String[] generateSonnet = writeSonnet();
+        for (String line : generateSonnet) {
+            System.out.println(line);
+			
+        }
+		
+		
+	}
+
 	// generating sonnet
     public String[] writeSonnet() {
         Random random = new Random();
@@ -53,17 +65,29 @@ public class DANI extends PApplet {
             }
 
             generateSonnet[i] = line.toString().trim();
+
+			
         }
+		text("" + words ,300,300);
+		
+
         return generateSonnet;
     }
+
+	public void keyPressed()
+	{
+		if (keyCode == ' '){
+			// print new sonnet
+			printModel();  
+		}
+	}
 
     public void setup() {
         colorMode(HSB);
         loadFile();
-        String[] generateSonnet = writeSonnet();
-        for (String line : generateSonnet) {
-            System.out.println(line);
-        }
+		printModel();
+		//writeSonnet();
+        
     }
 
     public void draw() {
@@ -72,6 +96,9 @@ public class DANI extends PApplet {
         noStroke();
         textSize(20);
         textAlign(CENTER, CENTER);
+
+		writeSonnet();
+		
     }
 
 
