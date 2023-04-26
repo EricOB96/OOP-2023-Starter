@@ -20,6 +20,14 @@ public class DANI extends PApplet {
         return null;
     }
 
+	public void loadFile()
+	{
+		loadStrings("small.txt"); // Load a text file into a String array
+		split(line, ' '); // Split a string into an array of words
+		w.replaceAll("[^\\w\\s]",""); // Remove punction characters
+		s.toLowerCase() // Convert a string to lower case 
+	}
+
 	public void setup() {
 		colorMode(HSB);
 
